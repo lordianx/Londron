@@ -437,6 +437,30 @@ cash = {
     name = "Spent on clothes",
     hash = MPX() .. "MONEY_SPENT_ON_CLOTHES",
     type = "int",
+}, {
+    name = "Earned from daily objective",
+    hash = MPX() .. "MONEY_EARN_DAILY_OBJECTIVE",
+    type = "int",
+}, {
+    name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    hash = MPX() .. "MONEY_EARN_DAILY_OBJECTIVE",
+    type = "int",
+}, {
+    name = "Spent on MC",
+    hash = MPX() .. "MONEY_SPENT_BIKER_BUSINESS",
+    type = "int",
+}, {
+    name = "Earned from MC",
+    hash = MPX() .. "MONEY_EARN_BIKER_BUSINESS",
+    type = "int",
+}, {
+    name = "Spent Boss",
+    hash = MPX() .. "MONEY_SPENT_BOSS_GOON",
+    type = "int",
+}, {
+    name = "Earned Boss",
+    hash = MPX() .. "MONEY_EARN_BOSS_GOON",
+    type = "int",
 }}
 
 
