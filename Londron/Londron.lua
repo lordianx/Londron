@@ -11,7 +11,7 @@ CURRENT_BUILD = Game.GetBuildNumber()
 CURRENT_VERSION = Game.GetOnlineVersion()
 
 if not NETWORK.NETWORK_IS_SESSION_ACTIVE() then
-    gui.show_error("Warning" .. TARGET_VERSION, " This script only works in the Online Mode!")
+    gui.show_error("Warning" , " This script only works in the Online Mode!")
 end
 
 
@@ -162,15 +162,19 @@ Skills:add_imgui(function()
         end
 end)
 
+
 -- character stats
 
+
+sex_acts = stats.get_int(MPX() .. "PROSTITUTES_FREQUENTED")
+lapdances = stats.get_int(MPX() .. "LAP_DANCED_BOUGHT")
 kills = stats.get_int("MPPLY_KILLS_PLAYERS")
 deaths = stats.get_int("MPPLY_DEATHS_PLAYER")
-earned = stats.get_int("MPPLY_TOTAL_EVC")
-spent = stats.get_int("MPPLY_TOTAL_SVC")
 kd = (kills/(deaths == 0 and 1 or deaths))
 
+
 -- distance stats
+
 
 distance = {{
     name = "Distance Travelled",
@@ -229,11 +233,9 @@ distance = {{
 }
 }
 
-for i, distanceStat in ipairs(distance) do
-    distance[i].value = stats.get_float(distanceStat.hash)
-end
 
--- time stats
+--time stats
+
 
 time = {
 {
@@ -338,20 +340,115 @@ time = {
     type = "int",
 }}
 
-time_multiplier = 60 * 60 * 1000
 
--- Cash Stats
+--cash stats
+
 
 cash = {
 {
-    name = "Total Earned",
+    name = "Overall income",
     hash = "MPPLY_TOTAL_EVC",
     type = "int",
 }, {
-    name = "Total Spent",
+    name = "Overall expenses",
     hash = "MPPLY_TOTAL_SVC",
     type = "int",
+}, {
+    name = "Spent on weapons & armor",
+    hash = MPX() .. "MONEY_SPENT_WEAPON_ARMOR",
+    type = "int",
+}, {
+    name = "Spent on vehicles & maintenance",
+    hash = MPX() .. "MONEY_SPENT_VEH_MAINTENANCE",
+    type = "int",
+}, {
+    name = "Spent on style & entertainment",
+    hash = MPX() .. "MONEY_SPENT_STYLE_ENT",
+    type = "int",
+}, {
+    name = "Spent on property & utilities",
+    hash = MPX() .. "MONEY_SPENT_PROPERTY_UTIL",
+    type = "int",
+}, {
+    name = "Spent on Job & Activity entry fees",
+    hash = MPX() .. "MONEY_SPENT_JOB_ACTIVITY",
+    type = "int",
+}, {
+    name = "Spent on contact services",
+    hash = MPX() .. "MONEY_SPENT_CONTACT_SERVICE",
+    type = "int",
+}, {
+    name = "Spent on healthcare",
+    hash = MPX() .. "MONEY_SPENT_HEALTHCARE",
+    type = "int",
+}, {
+    name = "Dropped or stolen",
+    hash = MPX() .. "MONEY_SPENT_DROPPED_STOLEN",
+    type = "int",
+}, {
+    name = "Given to others",
+    hash = MPX() .. "MONEY_SPENT_SHARED",
+    type = "int",
+}, {
+    name = "Job cash shared with others",
+    hash = MPX() .. "MONEY_SPENT_JOBSHARED",
+    type = "int",
+}, {
+    name = "Earned from Jobs",
+    hash = MPX() .. "MONEY_EARN_JOBS",
+    type = "int",
+}, {
+    name = "Earned from selling vehicles",
+    hash = MPX() .. "MONEY_EARN_SELLING_VEH",
+    type = "int",
+}, {
+    name = "Spent on betting",
+    hash = MPX() .. "MONEY_SPENT_BETTING",
+    type = "int",
+}, {
+    name = "Earned from betting",
+    hash = MPX() .. "MONEY_EARN_BETTING",
+    type = "int",
+}, {
+    name = "Earned from Good Sport reward",
+    hash = MPX() .. "MONEY_EARN_GOOD_SPORT",
+    type = "int",
+}, {
+    name = "Picked up",
+    hash = MPX() .. "MONEY_EARN_PICKED_UP",
+    type = "int",
+}, {
+    name = "Received from others",
+    hash = MPX() .. "MONEY_EARN_SHARED",
+    type = "int",
+}, {
+    name = "Job cash shared by others",
+    hash = MPX() .. "MONEY_EARN_JOBSHARED",
+    type = "int",
+}, {
+    name = "Spent on vehichles",
+    hash = MPX() .. "MONEY_SPENT_ON_VEHICLES",
+    type = "int",
+}, {
+    name = "Spent on weapons",
+    hash = MPX() .. "MONEY_SPENT_ON_WEAPONS",
+    type = "int",
+}, {
+    name = "Spent on clothes",
+    hash = MPX() .. "MONEY_SPENT_ON_CLOTHES",
+    type = "int",
 }}
+
+
+--stats functions
+
+
+time_multiplier = 60 * 60 * 1000
+
+for i, distanceStat in ipairs(distance) do
+    distance[i].value = stats.get_float(distanceStat.hash)
+end
+
 
 for i, cashStat in ipairs(cash) do
     if cashStat.type == "float" then
@@ -361,8 +458,6 @@ for i, cashStat in ipairs(cash) do
     end
 end
 
-sex_acts = stats.get_int(MPX() .. "PROSTITUTES_FREQUENTED")
-lapdances = stats.get_int(MPX() .. "LAP_DANCED_BOUGHT")
 
 for i, timeStat in ipairs(time) do
     if timeStat.type == "float" then
@@ -371,6 +466,7 @@ for i, timeStat in ipairs(time) do
         time[i].value = stats.get_int(timeStat.hash) / time_multiplier
     end
 end
+
 
 local Stats = Self:add_tab("Stat Editor")
 Stats:add_imgui(function()
@@ -415,15 +511,6 @@ Stats:add_imgui(function()
             stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
             kd = (kills / (deaths == 0 and 1 or deaths))
             gui.show_success("Updated Kill and Death Stats!")
-        end
-
-        ImGui.SeparatorText("Money")
-        earned, _ = ImGui.InputInt("Earned Money", earned, 0, 2147483647)
-        spent, _ = ImGui.InputInt("Spent Money", spent, 0, 2147483647)
-        if ImGui.Button("Apply##Money") then
-            stats.set_int("MPPLY_TOTAL_EVC", earned)
-            stats.set_int("MPPLY_TOTAL_SVC", spent)
-            gui.show_success("Updated Money Stats!")
         end
 
         ImGui.EndTabItem()
